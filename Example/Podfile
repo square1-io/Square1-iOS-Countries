@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'SQ1CountriesKit_Example' do
+  pod 'SQ1CountriesKit', :path => '../'
+
+  target 'SQ1CountriesKit_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
