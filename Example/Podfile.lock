@@ -1,0 +1,28 @@
+PODS:
+  - PhoneNumberKit (2.5.1):
+    - PhoneNumberKit/PhoneNumberKitCore (= 2.5.1)
+    - PhoneNumberKit/UIKit (= 2.5.1)
+  - PhoneNumberKit/PhoneNumberKitCore (2.5.1)
+  - PhoneNumberKit/UIKit (2.5.1):
+    - PhoneNumberKit/PhoneNumberKitCore
+  - SQ1CountriesKit (0.1.0):
+    - PhoneNumberKit
+
+DEPENDENCIES:
+  - SQ1CountriesKit (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - PhoneNumberKit
+
+EXTERNAL SOURCES:
+  SQ1CountriesKit:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  PhoneNumberKit: 87f03605453ca0f8b8e76083228ab729395f9004
+  SQ1CountriesKit: 3f0abd335fc48bfad66083d115e5f02dda379f8a
+
+PODFILE CHECKSUM: cf83d868d78c3f023fddb886af3ae77ba20b92af
+
+COCOAPODS: 1.5.3
