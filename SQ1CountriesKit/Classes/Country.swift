@@ -5,10 +5,16 @@
 //  Created by Ricardo Antolin on 07/02/2019.
 //  Copyright © 2019 Square1. All rights reserved.
 //
-import PhoneNumberKit
+
 import UIKit
 
-public class Country {
+public class Country: Codable {
+    
+    private enum CodingKeys: String, CodingKey {
+        case code
+        case phoneCode = "prefix"
+    }
+    
     public var name: String? {
         get{
             return Locale
@@ -17,11 +23,8 @@ public class Country {
         }
     }
     public let code: String
-    public var phoneCode: UInt64?{
-        get {
-            return PhoneNumberKit().countryCode(for: code)
-        }
-    }
+    public var phoneCode: UInt64
+    
     public var currencySymbol: String?{
         get {
             return Locale(identifier: identifierFromCode(code))
@@ -36,22 +39,18 @@ public class Country {
     }
     public var flag: UIImage? {
         get {
-            return UIImage(named: code.lowercased(), in: getPodBundle(), compatibleWith: nil)
+            return UIImage(named: code.lowercased(), in: Countries.getPodBundle(), compatibleWith: nil)
         }
     }
     
-    public init(code: String) {
+    public init(code: String,
+                phoneCode: UInt64) {
         self.code = code
+        self.phoneCode = phoneCode
     }
     
     private func identifierFromCode(_ code: String) -> String {
         return Locale.identifier(fromComponents: [NSLocale.Key.countryCode.rawValue: code])
     }
-    
-    private func getPodBundle() -> Bundle? {
-        let bundle = Bundle(for: type(of: self))
-        let bundleURL = bundle.resourceURL?.appendingPathComponent("SQ1CountriesKit.bundle")
-        print(bundleURL)
-        return Bundle(url: bundleURL!)
-    }
 }
+

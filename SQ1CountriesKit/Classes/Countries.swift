@@ -6,25 +6,48 @@
 //  Copyright © 2019 Square1. All rights reserved.
 //
 
-import PhoneNumberKit
-
 public class Countries {
-    public class func getCountryList() -> [Country]{
-        return Locale.isoRegionCodes.map{ Country(code: $0) }
-    }
-    
-    public class func findCountryByPhoneCode(phoneCode: UInt64) -> Country? {
-        if let countryCode = PhoneNumberKit().mainCountry(forCode: phoneCode) {
-            return Country(code: countryCode)
+    private static var countries: [Country] = {
+        guard let path = getPodBundle()?.path(forResource: "countries", ofType: "json") else {
+            return []
         }
-        return nil
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+            return try JSONDecoder().decode([Country].self, from: data)
+        } catch {
+            print(error)
+            return []
+        }
+    }()
+    
+    public class func getCountryList() -> [Country]{
+        return countries
     }
     
-    public class func findCountryByName(name: String) -> Country? {
-        return Locale.isoRegionCodes
-            .first{ Locale.current.localizedString(forRegionCode: $0)?.lowercased() == name.lowercased() }
-            .map{ Country(code: $0) }
+    public class func getCountryListSortedByLocalizedName() -> [Country]{
+        return countries.sorted{ $0.name ?? "" < $1.name ?? "" }
     }
+    
+    public class func findCountryByPhoneCode(_ phoneCode: UInt64) -> Country? {
+        return countries.first{ $0.phoneCode == phoneCode }
+    }
+    
+    public class func findCountryByRegionCode(_ regionCode: String) -> Country? {
+        return countries.first{ $0.code.lowercased() == regionCode.lowercased() }
+    }
+    
+    public class func findCountryByLocalizedName(_ name: String) -> Country? {
+        return countries
+            .first{ Locale.current.localizedString(forRegionCode: $0.code)?.lowercased() == name.lowercased() }
+    }
+    
+    class func getPodBundle() -> Bundle? {
+        let bundle = Bundle(for: Countries.self)
+        let bundleURL = bundle.resourceURL?.appendingPathComponent("SQ1CountriesKit.bundle")
+        print(bundleURL ?? "")
+        return Bundle(url: bundleURL!)
+    }
+    
 }
 
 extension Locale {
